@@ -7,10 +7,11 @@ const {
 } = require('graphql');
 const mongoose = require('mongoose');
 
+const Event = require('./models/eventModel');
+
 //Custom Config
 var config = require('./config')
 
-const events = []; // Global variable
 
 //Initialize express app
 const app = express();
@@ -61,19 +62,32 @@ app.use('/graphql', graphqlHttp({
   `),
   rootValue: {
     events: () => {
-      return events;
+      return Event.find().then((events) => {
+        return events.map(event => {
+          return {
+            ...event._doc
+          };
+        })
+      }).catch((err) => {
+        console.log(err);
+        throw err;
+      });
     },
     createEvent: (args) => {
-      const newEvent = {
-        _id: Math.random().toString(),
+      const event = new Event({
         title: args.eventInput.title.toString(),
         description: args.eventInput.description.toString(),
         price: +args.eventInput.price,
-        date: args.eventInput.date
-      };
-      console.log(args);
-      events.push(newEvent);
-      return newEvent;
+        date: new Date(args.eventInput.date)
+      });
+      return event.save().then((result) => {
+        return {
+          ...result._doc
+        };
+      }).catch((err) => {
+        console.log(err);
+        throw err;
+      });
     }
   },
   graphiql: true
