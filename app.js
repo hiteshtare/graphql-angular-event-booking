@@ -5,11 +5,25 @@ const graphqlHttp = require('express-graphql');
 const {
   buildSchema
 } = require('graphql');
+const mongoose = require('mongoose');
+
+//Custom Config
+var config = require('./config')
 
 const events = []; // Global variable
 
 //Initialize express app
 const app = express();
+
+//Connect to Database
+mongoose.connect(config.mongoURI_config, {
+  useNewUrlParser: true
+}).then(() => {
+  console.log(`Connected to ${config.mongoURI_config}`);
+}).catch((e) => {
+  throw e;
+});
+mongoose.Promise = global.Promise;
 
 //Middlewares
 app.use(bodyParser.json())
