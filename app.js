@@ -6,8 +6,10 @@ const {
   buildSchema
 } = require('graphql');
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 
 const Event = require('./models/eventModel');
+const User = require('./models/userModel');
 
 //Custom Config
 var config = require('./config')
@@ -40,6 +42,12 @@ app.use('/graphql', graphqlHttp({
     date:String!
   }
 
+  type User {
+    _id:ID!
+    email:String!
+    password:String
+  }
+
   input EventInput{
     title:String!,
     description:String!
@@ -47,12 +55,18 @@ app.use('/graphql', graphqlHttp({
     date:String!  
   }
 
+  input UserInput{
+    email:String!,
+    password:String
+  }
+
   type RootQuery {
     events : [Event!]!
   }
 
   type RootMutation {
-    createEvent(eventInput : EventInput): Event
+    createEvent(eventInput: EventInput): Event
+    createUser(userInput: UserInput): User
   }
   
   schema {
@@ -78,12 +92,46 @@ app.use('/graphql', graphqlHttp({
         title: args.eventInput.title.toString(),
         description: args.eventInput.description.toString(),
         price: +args.eventInput.price,
-        date: new Date(args.eventInput.date)
+        date: new Date(args.eventInput.date),
+        cretor: '5cdaa884cab32f6ec6fedb97'
       });
+      let createdEvent;
       return event.save().then((result) => {
-        return {
+        createdEvent = {
           ...result._doc
         };
+        return User.findById('5cdaa884cab32f6ec6fedb97');
+      }).then((user) => {
+        if (!user) {
+          throw new Error('User does not exists!')
+        }
+        user.createdEvents.push(event);
+        return user.save().then((result) => {
+          return createdEvent;
+        });
+      }).catch((err) => {
+        console.log(err);
+        throw err;
+      });
+    },
+    createUser: (args) => {
+      return User.findOne({
+        email: args.userInput.email
+      }).then((user) => {
+        if (user) {
+          throw new Error('User already exists!')
+        }
+        return bcrypt.hash(args.userInput.password, 12);
+      }).then((hashedPassword) => {
+        const user = new User({
+          email: args.userInput.email.toString(),
+          password: hashedPassword
+        });
+        return user.save().then((result) => {
+          return {
+            ...result._doc
+          };
+        });
       }).catch((err) => {
         console.log(err);
         throw err;
