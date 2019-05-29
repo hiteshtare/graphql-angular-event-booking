@@ -12,6 +12,9 @@ var config = require('./config')
 const graphQLSchema = require('./graphql/schema/index');
 const graphQLResolvers = require('./graphql/resolvers/index');
 
+//Custom Middleware
+const isAuth = require('./middleware/is-auth');
+
 //Initialize express app
 const app = express();
 
@@ -27,6 +30,7 @@ mongoose.Promise = global.Promise;
 
 //Middlewares
 app.use(bodyParser.json())
+app.use(isAuth);
 
 //GraphQL middleware
 app.use('/graphql', graphqlHttp({

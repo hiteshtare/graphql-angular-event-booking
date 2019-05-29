@@ -1,5 +1,6 @@
 //Models
 const Event = require('../../models/eventModel');
+const User = require('../../models/userModel');
 
 //Helpers
 const {
@@ -22,19 +23,24 @@ module.exports = {
     };
   },
 
-  createEvent: async (args) => {
+  createEvent: async (args, req) => {
     try {
+
+      if (!req.isAuth) {
+        throw new Error('User is Unauthenticated!')
+      }
+
       const event = new Event({
         title: args.eventInput.title.toString(),
         description: args.eventInput.description.toString(),
         price: +args.eventInput.price,
         date: dateToString(args.eventInput.date),
-        creator: '5ce23bde8f09db235842fbc6'
+        creator: req.userId
       });
       let createdEvent;
       const result = await event.save();
 
-      const creator = await User.findById('5ce23bde8f09db235842fbc6');
+      const creator = await User.findById(req.userId);
 
       if (!creator) {
         throw new Error('User does not exists!')
