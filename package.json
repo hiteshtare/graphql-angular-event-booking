@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js"
+    "start": "nodemon server/server.js"
   },
   "author": "",
   "license": "ISC",
@@ -16,6 +16,8 @@
     "express-graphql": "^0.8.0",
     "graphql": "^14.3.0",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.5.8"
+    "mongoose": "^5.5.8",
+    "primeicons": "^1.0.0",
+    "primeng": "^7.1.3"
   }
 }
