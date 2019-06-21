@@ -1,22 +1,26 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { AuthLayoutComponent } from './layout/auth-layout/auth-layout.component';
-import { ContentLayoutComponent } from './layout/content-layout/content-layout.component';
+
+import { LoginComponent } from './modules/auth/pages/login/login.component';
+import { EventsComponent } from './modules/content/pages/events/events.component';
+import { BookingsComponent } from './modules/content/pages/bookings/bookings.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/auth/login', pathMatch: 'full' },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
   {
-    path: 'auth',
-    component: AuthLayoutComponent,
-    loadChildren: './modules/auth/auth.module#AuthModule', // Lazy Loading
+    path: 'login',
+    component: LoginComponent,
   },
   {
-    path: 'content',
-    component: ContentLayoutComponent,
-    loadChildren: './modules/content/content.module#ContentModule', // Lazy Loading
+    path: 'events',
+    component: EventsComponent,
+  },
+  {
+    path: 'bookings',
+    component: BookingsComponent,
   },
   // Fallback when no prior routes is matched
-  { path: '**', redirectTo: '/auth/login' }
+  { path: '**', redirectTo: '/login' }
 ];
 
 @NgModule({
