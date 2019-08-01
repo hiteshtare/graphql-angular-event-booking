@@ -1,3 +1,4 @@
+import { UserDataService } from './shared/services/user-data.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -34,7 +35,7 @@ import { BookingsComponent } from './modules/content/pages/bookings/bookings.com
     ButtonModule,
     InputTextModule
   ],
-  providers: [],
+  providers: [UserDataService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

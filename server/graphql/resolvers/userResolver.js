@@ -43,7 +43,7 @@ module.exports = {
     });
 
     if (!user) {
-      throw new Error('User does not already exists!');
+      throw new Error('User does not exists!');
     }
 
     const isEqual = await bcrypt.compare(password, user.password);

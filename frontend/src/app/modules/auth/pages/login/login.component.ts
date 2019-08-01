@@ -1,3 +1,4 @@
+import { UserDataService } from './../../../../shared/services/user-data.service';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
@@ -12,7 +13,7 @@ export class LoginComponent implements OnInit {
   public loginErrorMessage: string;
   public loginError: boolean;
 
-  constructor(public formBuilder: FormBuilder) {
+  constructor(public formBuilder: FormBuilder, public userDataService: UserDataService) {
     this.loginForm = this.formBuilder.group({
       email: ['', Validators.required],
       password: ['', Validators.required]
@@ -26,30 +27,14 @@ export class LoginComponent implements OnInit {
     const email = formValue.email;
     const password = formValue.password;
 
-    const requestBody = {
-      query: `query{
-            login(email:"${email}",password:"${password}") {
-              userId
-              token
-              tokenExpiration
-            }
-        }`
-    };
-
-    fetch('http://localhost:4700/graphql', {
-      method: 'POST',
-      body: JSON.stringify(requestBody),
-      headers: {
-        'Content-Type': 'application/json'
+    this.userDataService.login(email, password).then((res) => {
+      if (!res['data']) {
+        alert(res.errors[0].message);
+      } else {
+        this.clearFields();
       }
-    }).then((res) => {
-      if (res.status !== 200 && res.status !== 201) {
-        throw new Error('Failed!');
-      }
-
-      return res.json();
     }).catch((err) => {
-      console.log(err);
+      console.error(err);
     });
   }
 
@@ -57,29 +42,19 @@ export class LoginComponent implements OnInit {
     const email = formValue.email;
     const password = formValue.password;
 
-    const requestBody = {
-      query: `mutation{
-            createUser(userInput:{email:"${email}",password:"${password}"}) {
-              _id,
-              email
-            }
-        }`
-    };
-
-    fetch('http://localhost:4700/graphql', {
-      method: 'POST',
-      body: JSON.stringify(requestBody),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }).then((res) => {
-      if (res.status !== 200 && res.status !== 201) {
-        throw new Error('Failed!');
+    this.userDataService.createUser(email, password).then((res) => {
+      if (res['errors']) {
+        alert(res.errors[0].message);
+      } else {
+        this.clearFields();
       }
 
-      return res.json();
     }).catch((err) => {
-      console.log(err);
+      console.error(err);
     });
+  }
+
+  clearFields() {
+    this.loginForm.reset();
   }
 }
