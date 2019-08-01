@@ -1,0 +1,9 @@
+.content-section.introduction {}
+
+.content-section {
+  margin-top: 10%;
+  display: block;
+  padding: 10px;
+  overflow: hidden;
+  background-color: #f5f7f8;
+}

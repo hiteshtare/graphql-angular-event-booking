@@ -2,6 +2,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const graphqlHttp = require('express-graphql');
+const cors = require('cors');
 
 const mongoose = require('mongoose');
 
@@ -29,6 +30,7 @@ mongoose.connect(config.mongoURI_config, {
 mongoose.Promise = global.Promise;
 
 //Middlewares
+app.use(cors()); //Cors (CROSS-ORIGIN RESOURCE SHARING) Middleware
 app.use(bodyParser.json())
 app.use(isAuth);
 
