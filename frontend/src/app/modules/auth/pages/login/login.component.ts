@@ -1,6 +1,8 @@
+import { CustomToastService } from './../../../../shared/services/custom-toast.service';
 import { UserDataService } from './../../../../shared/services/user-data.service';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-login',
@@ -13,8 +15,9 @@ export class LoginComponent implements OnInit {
   public loginErrorMessage: string;
   public loginError: boolean;
 
-  constructor(public formBuilder: FormBuilder, public userDataService: UserDataService) {
-    this.loginForm = this.formBuilder.group({
+  constructor(public _formBuilder: FormBuilder, public userDataService: UserDataService,
+    public customToastService: CustomToastService, public _spinner: NgxSpinnerService) {
+    this.loginForm = this._formBuilder.group({
       email: ['', Validators.required],
       password: ['', Validators.required]
     });
@@ -27,12 +30,15 @@ export class LoginComponent implements OnInit {
     const email = formValue.email;
     const password = formValue.password;
 
+    this._spinner.show();
     this.userDataService.login(email, password).then((res) => {
       if (!res['data']) {
-        alert(res.errors[0].message);
+        this.customToastService.toastMessage('error', 'Validation Error!', res.errors[0].message);
       } else {
+        this.customToastService.toastMessage('success', 'Login Success!', '');
         this.clearFields();
       }
+      this._spinner.hide();
     }).catch((err) => {
       console.error(err);
     });
@@ -42,13 +48,15 @@ export class LoginComponent implements OnInit {
     const email = formValue.email;
     const password = formValue.password;
 
+    this._spinner.show();
     this.userDataService.createUser(email, password).then((res) => {
       if (res['errors']) {
-        alert(res.errors[0].message);
+        this.customToastService.toastMessage('error', 'Validation Error!', res.errors[0].message);
       } else {
+        this.customToastService.toastMessage('success', 'Signup Success!', '');
         this.clearFields();
       }
-
+      this._spinner.hide();
     }).catch((err) => {
       console.error(err);
     });

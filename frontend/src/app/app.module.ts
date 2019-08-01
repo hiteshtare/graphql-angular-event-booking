@@ -1,3 +1,4 @@
+import { MessageService } from 'primeng/components/common/messageservice';
 import { UserDataService } from './shared/services/user-data.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
@@ -10,11 +11,17 @@ import { AppComponent } from './app.component';
 
 import { HeaderComponent } from './layout/header/header.component';
 
-import { MenubarModule, ButtonModule, InputTextModule } from 'primeng/primeng';
+import { MenubarModule, ButtonModule, InputTextModule, } from 'primeng/primeng';
+import { ToastModule } from 'primeng/toast';
+
+import { NgxSpinnerModule } from 'ngx-spinner'; // Spinner Module
 
 import { LoginComponent } from './modules/auth/pages/login/login.component';
 import { EventsComponent } from './modules/content/pages/events/events.component';
 import { BookingsComponent } from './modules/content/pages/bookings/bookings.component';
+
+import { CustomToastService } from './shared/services/custom-toast.service';
+import { LoaderComponent } from './shared/components/loader/loader.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +29,8 @@ import { BookingsComponent } from './modules/content/pages/bookings/bookings.com
     HeaderComponent,
     LoginComponent,
     EventsComponent,
-    BookingsComponent
+    BookingsComponent,
+    LoaderComponent
   ],
   imports: [
     BrowserModule,
@@ -33,9 +41,15 @@ import { BookingsComponent } from './modules/content/pages/bookings/bookings.com
     ReactiveFormsModule,
     MenubarModule,
     ButtonModule,
-    InputTextModule
+    InputTextModule,
+    ToastModule,
+    NgxSpinnerModule
   ],
-  providers: [UserDataService],
+  providers: [
+    UserDataService,
+    CustomToastService,
+    MessageService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
