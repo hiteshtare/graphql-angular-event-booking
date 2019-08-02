@@ -4,6 +4,7 @@ import { UserDataService } from './../../../../shared/services/user-data.service
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -17,7 +18,8 @@ export class LoginComponent implements OnInit {
   public loginError: boolean;
 
   constructor(public _formBuilder: FormBuilder, public userDataService: UserDataService,
-    public customToastService: CustomToastService, public globalService: GlobalService) {
+    public customToastService: CustomToastService, public globalService: GlobalService,
+    private _router: Router) {
     this.loginForm = this._formBuilder.group({
       email: ['', Validators.required],
       password: ['', Validators.required]
@@ -37,8 +39,8 @@ export class LoginComponent implements OnInit {
       if (!res['data']) {
         this.customToastService.toastMessage('error', 'Validation Error!', res.errors[0].message);
       } else {
-        this.customToastService.toastMessage('success', 'Login Success!', '');
-        this.clearFields();
+        this.globalService.authObject = res['data']['login'];
+        this._router.navigate(['/events']);
       }
       this.globalService.hideSpinner();
     }).catch((err) => {

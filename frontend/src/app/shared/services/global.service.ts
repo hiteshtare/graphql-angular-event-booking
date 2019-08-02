@@ -7,6 +7,12 @@ import { NgxSpinnerService } from 'ngx-spinner';
 export class GlobalService {
   public loaderMessage = '';
 
+  public authObject: {
+    token: string,
+    tokenExpiration: number,
+    userId: string,
+  };
+
   constructor(public _spinner: NgxSpinnerService) { }
 
   /**

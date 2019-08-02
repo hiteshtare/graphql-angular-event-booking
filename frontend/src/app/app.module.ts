@@ -23,6 +23,7 @@ import { BookingsComponent } from './modules/content/pages/bookings/bookings.com
 import { CustomToastService } from './shared/services/custom-toast.service';
 import { LoaderComponent } from './shared/components/loader/loader.component';
 import { GlobalService } from './shared/services/global.service';
+import { AuthGuard } from './shared/guards/auth.guard';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import { GlobalService } from './shared/services/global.service';
     UserDataService,
     GlobalService,
     CustomToastService,
-    MessageService
+    MessageService,
+    AuthGuard
   ],
   bootstrap: [AppComponent]
 })
