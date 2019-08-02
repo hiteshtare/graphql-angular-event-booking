@@ -22,6 +22,7 @@ import { BookingsComponent } from './modules/content/pages/bookings/bookings.com
 
 import { CustomToastService } from './shared/services/custom-toast.service';
 import { LoaderComponent } from './shared/components/loader/loader.component';
+import { GlobalService } from './shared/services/global.service';
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import { LoaderComponent } from './shared/components/loader/loader.component';
   ],
   providers: [
     UserDataService,
+    GlobalService,
     CustomToastService,
     MessageService
   ],
